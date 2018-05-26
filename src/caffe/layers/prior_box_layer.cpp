@@ -36,7 +36,7 @@ void PriorBoxLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
       }
     }
   }
-  num_priors_ = aspect_ratios_.size() * min_sizes_.size();
+  num_priors_ = aspect_ratios_.size() * min_sizes_.size() * 2;
   if (prior_box_param.max_size_size() > 0) {
     CHECK_EQ(prior_box_param.min_size_size(), prior_box_param.max_size_size());
     for (int i = 0; i < prior_box_param.max_size_size(); ++i) {
