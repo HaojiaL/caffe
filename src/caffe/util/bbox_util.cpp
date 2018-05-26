@@ -7,8 +7,10 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <fstream>
+#include <cstdlib>
 
-#include "boost/iterator/counting_iterator.hpp"
+#include "boost/iterator/counting_iterator.hpp" 
 
 #include "caffe/util/bbox_util.hpp"
 
@@ -2027,11 +2029,17 @@ void ComputeAP(const vector<pair<float, int> >& tp, const int num_pos,
                     (tp_cumsum[i] + fp_cumsum[i]));
   }
 
+  std::ofstream misrfile, fpfile, xxfile;
+  misrfile.open("/home/zwj/results/misrfile.txt", std::ofstream::out);
   // Compute recall.
   for (int i = 0; i < num; ++i) {
     CHECK_LE(tp_cumsum[i], num_pos);
     rec->push_back(static_cast<float>(tp_cumsum[i]) / num_pos);
+    misrfile << fp_cumsum[i] << ' ' << 1-(static_cast<float>(tp_cumsum[i]) / num_pos) << '\n';
   }
+  misrfile.close();
+  std::cout << "save done!" << std::endl;
+  system("python /home/zwj/results/file/misrplot.py");
 
   if (ap_version == "11point") {
     // VOC2007 style for computing AP.

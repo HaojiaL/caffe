@@ -852,11 +852,11 @@ def CreateMultiBoxHead(net, data_layer="data", num_classes=[], from_layers=[],
             if max_size:
                 assert len(max_size) == len(min_size), "max_size and min_size should have same length."
         if max_size:
-            num_priors_per_location = (2 + len(aspect_ratio)) * len(min_size)
+            num_priors_per_location = (2 + len(aspect_ratio)) * len(min_size) * 2
         else:
-            num_priors_per_location = (1 + len(aspect_ratio)) * len(min_size)
+            num_priors_per_location = (1 + len(aspect_ratio)) * len(min_size) * 2
         if flip:
-            num_priors_per_location += len(aspect_ratio) * len(min_size)
+            num_priors_per_location += len(aspect_ratio) * len(min_size) * 2
         step = []
         if len(steps) > i:
             step = steps[i]

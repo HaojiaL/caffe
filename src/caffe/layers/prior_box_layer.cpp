@@ -140,29 +140,16 @@ void PriorBoxLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
   Dtype* top_data = top[0]->mutable_cpu_data();
   int dim = layer_height * layer_width * num_priors_ * 4;
   int idx = 0;
-  for (int h = 0; h < layer_height; ++h) {
-    for (int w = 0; w < layer_width; ++w) {
-      float center_x = (w + offset_) * step_w;
-      float center_y = (h + offset_) * step_h;
-      float box_width, box_height;
-      for (int s = 0; s < min_sizes_.size(); ++s) {
-        int min_size_ = min_sizes_[s];
-        // first prior: aspect_ratio = 1, size = min_size
-        box_width = box_height = min_size_;
-        // xmin
-        top_data[idx++] = (center_x - box_width / 2.) / img_width;
-        // ymin
-        top_data[idx++] = (center_y - box_height / 2.) / img_height;
-        // xmax
-        top_data[idx++] = (center_x + box_width / 2.) / img_width;
-        // ymax
-        top_data[idx++] = (center_y + box_height / 2.) / img_height;
-
-        if (max_sizes_.size() > 0) {
-          CHECK_EQ(min_sizes_.size(), max_sizes_.size());
-          int max_size_ = max_sizes_[s];
-          // second prior: aspect_ratio = 1, size = sqrt(min_size * max_size)
-          box_width = box_height = sqrt(min_size_ * max_size_);
+  for (int offs = 0; offs < 2; ++offs) {
+    for (int h = 0; h < layer_height; ++h) {
+      for (int w = 0; w < layer_width; ++w) {
+        float center_x = (w + offset_ * offs) * step_w;
+        float center_y = (h + offset_) * step_h;
+        float box_width, box_height;
+        for (int s = 0; s < min_sizes_.size(); ++s) {
+          int min_size_ = min_sizes_[s];
+          // first prior: aspect_ratio = 1, size = min_size
+          box_width = box_height = min_size_;
           // xmin
           top_data[idx++] = (center_x - box_width / 2.) / img_width;
           // ymin
@@ -171,24 +158,39 @@ void PriorBoxLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
           top_data[idx++] = (center_x + box_width / 2.) / img_width;
           // ymax
           top_data[idx++] = (center_y + box_height / 2.) / img_height;
-        }
 
-        // rest of priors
-        for (int r = 0; r < aspect_ratios_.size(); ++r) {
-          float ar = aspect_ratios_[r];
-          if (fabs(ar - 1.) < 1e-6) {
-            continue;
+          if (max_sizes_.size() > 0) {
+            CHECK_EQ(min_sizes_.size(), max_sizes_.size());
+            int max_size_ = max_sizes_[s];
+            // second prior: aspect_ratio = 1, size = sqrt(min_size * max_size)
+            box_width = box_height = sqrt(min_size_ * max_size_);
+            // xmin
+            top_data[idx++] = (center_x - box_width / 2.) / img_width;
+            // ymin
+            top_data[idx++] = (center_y - box_height / 2.) / img_height;
+            // xmax
+            top_data[idx++] = (center_x + box_width / 2.) / img_width;
+            // ymax
+            top_data[idx++] = (center_y + box_height / 2.) / img_height;
           }
-          box_width = min_size_ * sqrt(ar);
-          box_height = min_size_ / sqrt(ar);
-          // xmin
-          top_data[idx++] = (center_x - box_width / 2.) / img_width;
-          // ymin
-          top_data[idx++] = (center_y - box_height / 2.) / img_height;
-          // xmax
-          top_data[idx++] = (center_x + box_width / 2.) / img_width;
-          // ymax
-          top_data[idx++] = (center_y + box_height / 2.) / img_height;
+
+          // rest of priors
+          for (int r = 0; r < aspect_ratios_.size(); ++r) {
+            float ar = aspect_ratios_[r];
+            if (fabs(ar - 1.) < 1e-6) {
+              continue;
+            }
+            box_width = min_size_ * sqrt(ar);
+            box_height = min_size_ / sqrt(ar);
+            // xmin
+            top_data[idx++] = (center_x - box_width / 2.) / img_width;
+            // ymin
+            top_data[idx++] = (center_y - box_height / 2.) / img_height;
+            // xmax
+            top_data[idx++] = (center_x + box_width / 2.) / img_width;
+            // ymax
+            top_data[idx++] = (center_y + box_height / 2.) / img_height;
+          }
         }
       }
     }
