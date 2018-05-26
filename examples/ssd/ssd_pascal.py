@@ -312,9 +312,11 @@ min_sizes = []
 max_sizes = []
 for ratio in xrange(min_ratio, max_ratio + 1, step):
   min_sizes.append(min_dim * ratio / 100.)
-  max_sizes.append(min_dim * (ratio + step) / 100.)
+  #max_sizes.append(0)
+  # max_sizes.append(min_dim * (ratio + step) / 100.)
+#max_sizes.append(0)
 min_sizes = [min_dim * 10 / 100.] + min_sizes
-max_sizes = [min_dim * 20 / 100.] + max_sizes
+# max_sizes = [min_dim * 20 / 100.] + max_sizes
 steps = [8, 16, 32, 64, 100, 300]
 aspect_ratios = [[2], [2, 3], [2, 3], [2, 3], [2], [2]]
 # L2 normalize conv4_3.
@@ -324,12 +326,12 @@ if code_type == P.PriorBox.CENTER_SIZE:
   prior_variance = [0.1, 0.1, 0.2, 0.2]
 else:
   prior_variance = [0.1]
-flip = True
+flip = False
 clip = False
 
 # Solver parameters.
 # Defining which GPUs to use.
-gpus = "0,1,2,3"
+gpus = "0,1"
 gpulist = gpus.split(",")
 num_gpus = len(gpulist)
 
