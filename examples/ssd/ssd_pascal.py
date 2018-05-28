@@ -318,7 +318,7 @@ for ratio in xrange(min_ratio, max_ratio + 1, step):
 min_sizes = [min_dim * 10 / 100.] + min_sizes
 # max_sizes = [min_dim * 20 / 100.] + max_sizes
 steps = [8, 16, 32, 64, 100, 300]
-aspect_ratios = [[2], [2, 3], [2, 3], [2, 3], [2], [2]]
+aspect_ratios = [[2,1/2.], [2, 1/2., 3, 3/2.], [2, 1/2., 3, 3/2.], [2, 1/2., 3, 3/2.], [2,1/2.], [2,1/2.]]
 # L2 normalize conv4_3.
 normalizations = [20, -1, -1, -1, -1, -1]
 # variance used to encode/decode prior bboxes.
@@ -334,7 +334,7 @@ clip = False
 gpus = "0,1"
 gpulist = gpus.split(",")
 num_gpus = len(gpulist)
-
+	
 # Divide the mini-batch to different GPUs.
 batch_size = 32
 accum_batch_size = 32

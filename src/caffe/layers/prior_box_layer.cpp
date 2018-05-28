@@ -140,9 +140,10 @@ void PriorBoxLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
   Dtype* top_data = top[0]->mutable_cpu_data();
   int dim = layer_height * layer_width * num_priors_ * 4;
   int idx = 0;
-  for (int offs = 0; offs < 2; ++offs) {
+  
     for (int h = 0; h < layer_height; ++h) {
       for (int w = 0; w < layer_width; ++w) {
+        for (int offs = 0; offs < 2; ++offs) {
         float center_x = (w + offset_ * offs) * step_w;
         float center_y = (h + offset_) * step_h;
         float box_width, box_height;
