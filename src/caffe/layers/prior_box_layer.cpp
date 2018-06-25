@@ -43,7 +43,7 @@ void PriorBoxLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
       max_sizes_.push_back(prior_box_param.max_size(i));
       CHECK_GT(max_sizes_[i], min_sizes_[i])
           << "max_size must be greater than min_size.";
-      num_priors_ += 1;
+      num_priors_ += 2;
     }
   }
   clip_ = prior_box_param.clip();
