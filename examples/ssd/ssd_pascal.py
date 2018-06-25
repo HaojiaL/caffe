@@ -313,12 +313,12 @@ max_sizes = []
 for ratio in xrange(min_ratio, max_ratio + 1, step):
   min_sizes.append(min_dim * ratio / 100.)
   #max_sizes.append(0)
-  # max_sizes.append(min_dim * (ratio + step) / 100.)
+  max_sizes.append(min_dim * (ratio + step) / 100.)
 #max_sizes.append(0)
 min_sizes = [min_dim * 10 / 100.] + min_sizes
-# max_sizes = [min_dim * 20 / 100.] + max_sizes
+max_sizes = [min_dim * 20 / 100.] + max_sizes
 steps = [8, 16, 32, 64, 100, 300]
-aspect_ratios = [[2,1/2.], [2, 1/2., 3, 3/2.], [2, 1/2., 3, 3/2.], [2, 1/2., 3, 3/2.], [2,1/2.], [2,1/2.]]
+aspect_ratios = [[2], [2, 3], [2, 3], [2, 3], [2], [2]]
 # L2 normalize conv4_3.
 normalizations = [20, -1, -1, -1, -1, -1]
 # variance used to encode/decode prior bboxes.
@@ -326,7 +326,7 @@ if code_type == P.PriorBox.CENTER_SIZE:
   prior_variance = [0.1, 0.1, 0.2, 0.2]
 else:
   prior_variance = [0.1]
-flip = False
+flip = True
 clip = False
 
 # Solver parameters.
